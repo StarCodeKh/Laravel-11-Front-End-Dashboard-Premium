@@ -9,10 +9,6 @@
     <link rel="icon" type="image/png" href="{{ URL::to('assets/images/favicon.png') }}">
     <!-- CSS Assets -->
     <link rel="stylesheet" href="{{ URL::to('assets/css/app.css') }}">
-    <!-- message toastr -->
-	<link rel="stylesheet" href="{{ URL::to('assets/css/toastr.min.css') }}">
-	<script src="{{ URL::to('assets/js/toastr_jquery.min.js') }}"></script>
-	<script src="{{ URL::to('assets/js/toastr.min.js') }}"></script>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">

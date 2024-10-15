@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 
@@ -47,21 +46,21 @@ class AuthenticationController extends Controller
                 // Handle the error
                 if (isset($responseData['errors']['email'])) {
                     // Email already taken
-                    Toastr::error('The email has already been taken. Please use a different email.', 'Error');
+                    flash()->error('The email has already been taken. Please use a different email.');
                 } else {
-                    Toastr::error('Registration failed. Please try again.', 'Error');
+                    flash()->error('Registration failed. Please try again.');
                 }
                 return redirect()->back();
                
             } else {
-                Toastr::success('Registration Successful :)', 'Success');
+                flash()->success('Registration Successful :)');
                 return redirect()->intended('login');
             }
 
         } catch (Exception $e) {
             // Handle the exception
             \Log::error('Registration error: ' . $e->getMessage());
-            Toastr::error('An error occurred during registration. Please try again later.');
+            flash()->error('An error occurred during registration. Please try again later.');
             return redirect()->back();
         }
     }
@@ -96,17 +95,17 @@ class AuthenticationController extends Controller
             if ($responseData['response_code'] == 200) {
                 // Store the token in the session or a cookie
                 $request->session()->put('token', $responseData['token']);
-                Toastr::success('Login Successfully :)','Success');
+                flash()->success('Login Successfully :)');
                 return redirect()->intended('home');
             } else {
                 // Handle the error
-                Toastr::error('fail, WRONG USERNAME OR PASSWORD :)','Error');
+                flash()->error('fail, WRONG USERNAME OR PASSWORD :)');
                 return redirect()->back();
             }
         } catch (Exception $e) {
             // Handle the exception
             \Log::error('Login error: ' . $e->getMessage());
-            Toastr::error('An error occurred while logging in.');
+            flash()->error('An error occurred while logging in.');
             return redirect()->back();
         }
     }
