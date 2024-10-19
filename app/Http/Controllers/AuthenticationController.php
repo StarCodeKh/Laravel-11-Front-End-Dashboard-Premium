@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Session;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -10,13 +11,13 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthenticationController extends Controller
 {
-    /** register page */
+    /** Register page */
     public function register()
     {
         return view('authentication.register');
     }
 
-    /** register account post */
+    /** Register Account */
     public function registerAccount(Request $request)
     {
         $request->validate([
@@ -65,13 +66,13 @@ class AuthenticationController extends Controller
         }
     }
 
-    /** index login page */
+    /** Login Page */
     public function login()
     {
         return view('authentication.login');
     }
 
-    /** login account post */
+    /** Login Account */
     public function loginAccount(Request $request)
     {
         $request->validate([
@@ -106,6 +107,37 @@ class AuthenticationController extends Controller
             // Handle the exception
             \Log::error('Login error: ' . $e->getMessage());
             flash()->error('An error occurred while logging in.');
+            return redirect()->back();
+        }
+    }
+
+    /** logOut Account */
+    public function logoutAccount(Request $request)
+    {
+        try {
+            $url = env('APP_URL') . '/api/logout'; // Correct endpoint for logout
+
+            // Make a POST request to the logout API endpoint
+            $response = Http::withOptions(['verify' => false])
+            ->withHeaders([ 
+                'X-Requested-With' => 'XMLHttpRequest', 
+                'Authorization' => 'Bearer ' . Session::get('token'), // Include the token
+            ])->post($url);
+ 
+            if ($response->successful()) {
+                // Clear the session token
+                Session::forget('token');
+                flash()->success('Logged out successfully!');
+                return redirect()->route('login'); // Redirect to login or home
+            } else {
+                // Handle the error
+                flash()->error('Logout failed, please try again.');
+                return redirect()->back();
+            }
+        } catch (\Exception $e) {
+            // Handle the exception
+            \Log::error('Logout error: ' . $e->getMessage());
+            flash()->error('An error occurred while logging out.');
             return redirect()->back();
         }
     }
